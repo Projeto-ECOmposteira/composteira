@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -28,7 +29,6 @@ DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = [config('ALLOWED_HOSTS', default='*')]
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # External
     'rest_framework',
+    # Apps
+    'composter',
 ]
 
 MIDDLEWARE = [
@@ -78,8 +80,14 @@ WSGI_APPLICATION = 'composter_microservice.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'djongo',
+        'NAME': config('MONGO_DB', default='composter-db'),
+        'CLIENT': {
+            'host': 'db',
+            'port': config('MONGO_PORT',  default=27017, cast=int),
+            'USERNAME': config('MONGO_USER'),
+            'PASSWORD': config('MONGO_PASSWORD'),
+        }
     }
 }
 

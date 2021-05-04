@@ -4,16 +4,20 @@ services:
   db:
     container_name: composter-db
     image: mongo
+    command: mongod --auth
     ports:
       - "27017:27017"
     environment:
       - MONGO_INITDB_ROOT_USERNAME=${MONGO_USER}
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
+      - MONGO_INITDB_DATABASE=${MONGO_DB}
     healthcheck:
       test: echo 'db.runCommand("ping").ok' | mongo localhost:27017/test --quiet
       interval: 10s
       timeout: 10s
       retries: 5
+    networks:
+      - mongo-compose-network
 
   web:
     build: .
@@ -26,3 +30,9 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    networks:
+      - mongo-compose-network
+
+networks: 
+  mongo-compose-network:
+    driver: bridge

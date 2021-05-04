@@ -1,0 +1,9 @@
+SECRET_KEY=idwyws0acmgpqw%t*1k12t8!luo*tx=_@miz6=8#30s7&ye*$p
+DEBUG=True
+ALLOWED_HOSTS=*
+ENVIRONMENT=DEVELOPMENT
+MONGO_DB=composter-db
+MONGO_USER=mongo
+MONGO_PASSWORD=mongo
+MONGO_PORT=27017
+FRONT_BASE_URL=localhost:3000
