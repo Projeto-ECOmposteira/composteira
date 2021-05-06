@@ -85,9 +85,9 @@ DATABASES = {
         'CLIENT': {
             'host': 'db',
             'port': config('MONGO_PORT',  default=27017, cast=int),
-            'USERNAME': config('MONGO_USER'),
-            'PASSWORD': config('MONGO_PASSWORD'),
-        }
+            'username': config('MONGO_USER'),
+            'password': config('MONGO_PASSWORD'),
+        },
     }
 }
 
