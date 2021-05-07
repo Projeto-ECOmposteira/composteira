@@ -15,3 +15,14 @@ class Material(models.Model):
 
     def __str__(self):
         return self.name
+
+class Composter(models.Model):
+    _id = models.ObjectIdField()
+    supermarketId = models.IntegerField()
+    macAddress = models.CharField(max_length=18, blank=False)
+    name = models.CharField(max_length=127, blank=False)
+    description = models.TextField()
+    isActive = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.name
