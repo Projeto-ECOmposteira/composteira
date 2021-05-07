@@ -16,6 +16,7 @@ from djongo import *
 from .models import *
 from .serializers import *
 from bson import ObjectId
+import json
 
 class MaterialTypeViewSet(viewsets.ViewSet):
     def list(self, request):
@@ -62,7 +63,7 @@ def materials(request):
 
     return Response(
         response_data,
-        status=HTTP_201_CREATED
+        status=HTTP_200_OK
     )
 
 @api_view(["PUT", "DELETE"])
@@ -188,4 +189,21 @@ def updateComposter(request, id):
         return Response(
             {'error': 'Método não permitido'},
             status=HTTP_405_METHOD_NOT_ALLOWED
+        )
+
+@api_view(["POST"])
+def getProducerComposters(request):
+    producer_supermarkets = json.loads(request.data['markets'])
+
+    composters = []
+    for each in producer_supermarkets:
+        each_composters = Composter.objects.filter(supermarketId = each['pk'])
+        each_composters = ComposterSerializer(each_composters, many=True).data
+        for i in each_composters:
+            i['supermarketEmail'] = each['email']
+        composters.append(each_composters)
+
+    return Response(
+            composters,
+            status=HTTP_200_OK
         )
