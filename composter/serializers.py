@@ -19,3 +19,8 @@ class MaterialSerializer(serializers.ModelSerializer):
         )
 
         return material
+
+class ComposterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Composter
+        fields = ('__all__')

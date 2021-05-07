@@ -41,8 +41,8 @@ def registerMaterial(request):
         )
     except Exception:
         return Response(
-            {'error': 'Erro interno do servidor'},
-            status=HTTP_500_INTERNAL_SERVER_ERROR
+            {'error': 'Atributos obrigatórios: name, imageLink'},
+            status=HTTP_400_BAD_REQUEST
         )
     
     response_data = MaterialSerializer(material).data
@@ -84,37 +84,101 @@ def updateMaterial(request, id):
         )
 
     elif request.method == "PUT":
-        try:
-            if request.data['name']:
+        if request.data.get('name', None):
                 material.name = request.data['name']
-        except Exception:
-            pass 
 
-        try:
-            if request.data['imageLink']:
+        if request.data.get('imageLink', None):
                 material.imageLink = request.data['imageLink']
-        except Exception:
-            pass 
+                
+        if request.data.get('imageLink', None):
+            try:
+                material_type_id = ObjectId(request.data['materialType'])
+                material_type = MaterialType.objects.get(_id=material_type_id)
+            except Exception:
+                return Response(
+                    {'error': 'Tipo de material - ID inválido'},
+                    status=HTTP_400_BAD_REQUEST
+                ) 
 
-        try:
-            if request.data['materialType']:
-                try:
-                    material_type_id = ObjectId(request.data['materialType'])
-                    material_type = MaterialType.objects.get(_id=material_type_id)
-                except Exception:
-                    return Response(
-                        {'error': 'Tipo de material - ID inválido'},
-                        status=HTTP_400_BAD_REQUEST
-                    ) 
+            material.materialType = material_type
 
-                material.materialType = material_type
-        except Exception:
-            pass 
 
         material.save()
 
         response_data = MaterialSerializer(material).data
         response_data['materialType'] = str(response_data['materialType'])
+
+        return Response(
+            response_data,
+            status=HTTP_200_OK
+        )
+    else:
+        return Response(
+            {'error': 'Método não permitido'},
+            status=HTTP_405_METHOD_NOT_ALLOWED
+        )
+
+@api_view(["POST"])
+def registerComposter(request):
+    try:
+        composter = Composter.objects.create( 
+            supermarketId = request.data['supermarketId'],
+            macAddress = request.data['macAddress'],
+            name = request.data['name'],
+            description = request.data['description'],
+        )
+    except Exception:
+        return Response(
+            {'error': 'Atributos obrigatórios: supermarketId, name, macAddress, description'},
+            status=HTTP_400_BAD_REQUEST 
+        )
+    
+    response_data = ComposterSerializer(composter).data
+    return Response(
+        response_data,
+        status=HTTP_201_CREATED
+    )
+
+@api_view(["PUT", "DELETE"])
+def updateComposter(request, id):
+    try:
+        composter_id = ObjectId(id)
+        composter = Composter.objects.get(_id=composter_id)
+    except Exception:
+        return Response(
+            {'error': 'Composteira - ID inválido'},
+            status=HTTP_400_BAD_REQUEST
+        )
+    if request.method == "DELETE":
+        if not composter.isActive:
+            return Response(
+                {'error':'Composteira não está ativa'},
+                status=HTTP_400_BAD_REQUEST
+            )
+
+        composter.isActive = False
+        composter.save()
+        return Response(
+            {'OK':'Deleted'},
+            status=HTTP_200_OK
+        )
+
+    elif request.method == "PUT":
+        if request.data.get('name', None):
+            composter.name = request.data['name']
+
+        if request.data.get('macAddress', None):
+                composter.macAddress = request.data['macAddress']
+
+        if request.data.get('description', None):
+                composter.description = request.data['description']
+
+        if request.data.get('supermarketId', None):
+                composter.supermarketId = request.data['supermarketId']
+
+        composter.save()
+
+        response_data = ComposterSerializer(composter).data
 
         return Response(
             response_data,
