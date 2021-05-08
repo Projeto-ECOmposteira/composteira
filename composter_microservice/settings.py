@@ -85,7 +85,7 @@ DATABASES = {
         'ENGINE': 'djongo',
         'NAME': config('MONGO_DB', default='composter-db'),
         'CLIENT': {
-            'host': 'db',
+            'host': config('DATABASE_URL',  default='db'),
             'port': config('MONGO_PORT',  default=27017, cast=int),
             'username': config('MONGO_USER'),
             'password': config('MONGO_PASSWORD'),
