@@ -29,6 +29,8 @@ DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = [config('ALLOWED_HOSTS', default='*')]
 
+ENVIRONMENT = [config('ENVIRONMENT', default='DEVELOPMENT')]
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -81,15 +83,20 @@ WSGI_APPLICATION = 'composter_microservice.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'djongo',
-        'NAME': config('MONGO_DB', default='composter-db'),
+        # 'NAME': config('MONGO_DB', default='composter-db'),
         'CLIENT': {
-            'host': 'db',
+            'host': config('DATABASE_URL',  default='db'),
             'port': config('MONGO_PORT',  default=27017, cast=int),
             'username': config('MONGO_USER'),
             'password': config('MONGO_PASSWORD'),
         },
     }
 }
+
+if ENVIRONMENT == 'HOMOLOGATION':
+    import dj_database_url
+    db_from_env = dj_database_url.config()
+    DATABASES['default'].update(db_from_env)
 
 
 # Password validation

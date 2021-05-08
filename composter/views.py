@@ -17,6 +17,7 @@ from .models import *
 from .serializers import *
 from bson import ObjectId
 import json
+from bson import json_util
 
 class MaterialTypeViewSet(viewsets.ViewSet):
     def list(self, request):
@@ -216,5 +217,37 @@ def getSupermarketComposters(request):
 
     return Response(
             composters,
+            status=HTTP_200_OK
+        )
+
+@api_view(["POST"])
+def getComposterAlerts(request):
+    producer_supermarkets = json.loads(request.data['markets'])
+
+    composters = []
+    for each in producer_supermarkets:
+        each_composters = Composter.objects.filter(supermarketId = each['pk'])
+        each_composters = ComposterSerializer(each_composters, many=True).data
+        for i in each_composters:
+            i['supermarketEmail'] = each['email']
+        composters.append(each_composters)
+
+    alerts = []
+
+    for composter in composters:
+        for each in composter:
+            _composter = Composter.objects.get(_id = ObjectId(each['_id']))
+
+            each_alerts = Alert.objects.filter(composter = _composter, endDate = None)
+            each_alerts = AlertSerializer(each_alerts, many=True).data
+
+            for _alert in each_alerts:
+                _alert['composter'] = ComposterSerializer(_composter).data       
+            
+            alerts.append(each_alerts)
+
+
+    return Response(
+            json.loads(json_util.dumps(alerts)),
             status=HTTP_200_OK
         )
