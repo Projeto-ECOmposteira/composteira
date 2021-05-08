@@ -37,3 +37,16 @@ class Alert(models.Model):
 
     def __str__(self):
         return "{} - {}".format(self.initDate, self.description)
+
+class Measurement(models.Model):
+    _id = models.ObjectIdField()
+    composter = models.ForeignKey(Composter, on_delete=models.CASCADE)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    co2 = models.FloatField(blank=False)
+    ph = models.FloatField(blank=False)
+    pressure = models.FloatField(blank=False)
+    humidity = models.FloatField(blank=False)
+    temperature = models.FloatField(blank=False)
+    cn = models.FloatField(blank=False)
+    oxigen = models.FloatField(blank=False)
+    weight = models.FloatField(blank=False)

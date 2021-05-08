@@ -200,8 +200,18 @@ def getProducerComposters(request):
     for each in producer_supermarkets:
         each_composters = Composter.objects.filter(supermarketId = each['pk'])
         each_composters = ComposterSerializer(each_composters, many=True).data
-        for i in each_composters:
-            i['supermarketEmail'] = each['email']
+        for _composter in each_composters:
+            _composter['supermarketEmail'] = each['email']
+            composter = Composter.objects.get(_id=ObjectId(_composter['_id']))
+            _composter_last_measurement = Measurement.objects.filter(composter=composter)
+
+            if _composter_last_measurement.count():
+                _composter_last_measurement = _composter_last_measurement.latest('timestamp')
+                _composter_last_measurement_data = MeasurementSerializer(_composter_last_measurement).data
+                _composter.update(_composter_last_measurement_data)
+                _composter.update(ComposterSerializer(composter).data)
+                _composter.pop('composter')
+
         composters.append(each_composters)
 
     return Response(
@@ -214,6 +224,17 @@ def getSupermarketComposters(request):
 
     composters = Composter.objects.filter(supermarketId = request.data['pk'])
     composters = ComposterSerializer(composters, many=True).data
+
+    for _composter in composters:
+        composter = Composter.objects.get(_id=ObjectId(_composter['_id']))
+        _composter_last_measurement = Measurement.objects.filter(composter=composter)
+
+        if _composter_last_measurement.count():
+            _composter_last_measurement = _composter_last_measurement.latest('timestamp')
+            _composter_last_measurement_data = MeasurementSerializer(_composter_last_measurement).data
+            _composter.update(_composter_last_measurement_data)
+            _composter.update(ComposterSerializer(composter).data)
+            _composter.pop('composter')
 
     return Response(
             composters,
