@@ -83,7 +83,7 @@ WSGI_APPLICATION = 'composter_microservice.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'djongo',
-        'NAME': config('MONGO_DB', default='composter-db'),
+        # 'NAME': config('MONGO_DB', default='composter-db'),
         'CLIENT': {
             'host': config('DATABASE_URL',  default='db'),
             'port': config('MONGO_PORT',  default=27017, cast=int),
