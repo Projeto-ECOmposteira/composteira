@@ -207,3 +207,14 @@ def getProducerComposters(request):
             composters,
             status=HTTP_200_OK
         )
+
+@api_view(["POST"])
+def getSupermarketComposters(request):
+
+    composters = Composter.objects.filter(supermarketId = request.data['pk'])
+    composters = ComposterSerializer(composters, many=True).data
+
+    return Response(
+            composters,
+            status=HTTP_200_OK
+        )
