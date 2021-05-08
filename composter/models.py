@@ -26,3 +26,14 @@ class Composter(models.Model):
 
     def __str__(self):
         return self.name
+
+class Alert(models.Model):
+    _id = models.ObjectIdField()
+    alertType = models.IntegerField()
+    initDate = models.DateTimeField(auto_now_add=True)
+    endDate = models.DateTimeField()
+    description = models.TextField(max_length=255, blank=False)
+    composter = models.ForeignKey(Composter, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return "{} - {}".format(self.initDate, self.description)
