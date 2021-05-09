@@ -22,7 +22,7 @@ Inicialmente, instale localmente as seguintes dependências:
 
 ### Arquivo de Configuração
 
-1. Crie um arquivo `.env` e preencha as variáveis de ambiente de acordo com os exemplos localizados nos arquivos `.env.example`.
+1. Crie um arquivo `.env` e preencha as variáveis de ambiente de acordo com os exemplos localizados nos arquivos `env-reference`.
 
 ### Inicialização do Projeto
 
