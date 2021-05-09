@@ -32,4 +32,4 @@ Inicialmente, instale localmente as seguintes dependências:
 sudo make
 ```
 
-2. O microsserviço de notificação estará disponível em: `http://localhost:8002/`.
+2. O microsserviço da composteira estará disponível em: `http://localhost:8002/`.
