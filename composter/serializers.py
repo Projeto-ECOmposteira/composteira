@@ -29,3 +29,8 @@ class AlertSerializer(serializers.ModelSerializer):
     class Meta:
         model = Alert
         fields = ('__all__')
+
+class MeasurementSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Measurement
+        fields = ('__all__')
