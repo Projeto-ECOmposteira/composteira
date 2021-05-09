@@ -272,3 +272,33 @@ def getComposterAlerts(request):
             json.loads(json_util.dumps(alerts)),
             status=HTTP_200_OK
         )
+
+@api_view(["GET"])
+def getComposterReport(request, id):
+    print(id)
+    try:
+        composter_id = ObjectId(id)
+        composter = Composter.objects.get(_id=composter_id)
+    except Exception:
+        return Response(
+            {'error': 'Composteira - ID inválido'},
+            status=HTTP_400_BAD_REQUEST
+        )
+
+    measurements = Measurement.objects.filter(composter=composter)
+    response_data = []
+    for each in measurements:
+        c = round(each.cn*100)
+        response_data.append({
+            "timestamp": each.timestamp,
+            "temperature": each.temperature,
+            "cn": {
+                "c": c,
+                "n": 100-c
+            }
+        })
+
+    return Response(
+            response_data,
+            status=HTTP_200_OK
+        )

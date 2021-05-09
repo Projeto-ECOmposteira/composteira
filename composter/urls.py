@@ -16,6 +16,7 @@ urlpatterns = [
     path('', include(router.urls)),
     url(r'update_material/(?P<id>[A-Za-z0-9]+)$', updateMaterial, name='update-material'),
     url(r'update_composter/(?P<id>[A-Za-z0-9]+)$', updateComposter, name='update-composter'),
+    url(r'get_composter_report/(?P<id>[A-Za-z0-9]+)$', getComposterReport, name='get-composter-report'),
 ]
 
 from . import mqtt
