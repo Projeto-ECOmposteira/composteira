@@ -17,3 +17,7 @@ urlpatterns = [
     url(r'update_material/(?P<id>[A-Za-z0-9]+)$', updateMaterial, name='update-material'),
     url(r'update_composter/(?P<id>[A-Za-z0-9]+)$', updateComposter, name='update-composter'),
 ]
+
+from . import mqtt
+
+mqtt.client.loop_start()
