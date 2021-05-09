@@ -237,7 +237,7 @@ def getSupermarketComposters(request):
             _composter.pop('composter')
 
     return Response(
-            composters,
+            [composters],
             status=HTTP_200_OK
         )
 
