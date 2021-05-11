@@ -288,7 +288,7 @@ def getComposterReport(request, id):
     measurements = Measurement.objects.filter(composter=composter)
     response_data = []
     for each in measurements:
-        c = round(each.cn*100)
+        c = round(each.cn)
         response_data.append({
             "timestamp": each.timestamp,
             "temperature": each.temperature,
