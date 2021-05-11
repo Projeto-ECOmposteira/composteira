@@ -8,6 +8,7 @@ def on_connect(client, userdata, flags, rc):
 def on_message(client, userdata, msg):
     temp = msg.payload.decode('utf8').replace("'", '"')
     data = json.loads(temp)
+    print("MSG_RECEIVED: ", msg.payload)
     try:
         composter = Composter.objects.get(macAddress=data['macAddress'])
         data.pop('macAddress')
